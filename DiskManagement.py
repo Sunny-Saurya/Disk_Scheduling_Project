@@ -62,7 +62,6 @@ def cscan(requests, head):
             head = req
     return sequence, total_movement
 
-# GUI Setup
 root = tk.Tk()
 root.title("Disk Scheduling Simulator")
 root.geometry("1000x650")
@@ -88,7 +87,6 @@ output_label = tk.Label(root, text="", font=("Arial", 12))
 output_label.pack()
 
 def animate_movement(x1, x2, y):
-    # Simple animation from x1 to x2 with a moving arrow
     direction = 1 if x2 > x1 else -1
     arrow = canvas.create_polygon(x1, y-5, x1-10, y, x1, y+5, fill="blue", outline="black")
     for x in range(int(x1), int(x2), direction*3):
@@ -101,16 +99,11 @@ def draw_disk(requests, initial_head, sequence):
     canvas.delete("all")
     scale = 900 / MAX_TRACK
     y = 125
-
-    # Draw base track line
     canvas.create_line(25, y, 925, y, fill="gray", width=2)
-
-    # Draw all track markers
     for r in sorted(set(requests + [initial_head])):
         x = 25 + r * scale
         canvas.create_oval(x-3, y-3, x+3, y+3, fill="red")
         canvas.create_text(x, y + 15, text=str(r), font=("Arial", 8))
-
     head = initial_head
     for req in sequence:
         x1 = 25 + head * scale
@@ -136,7 +129,8 @@ def run_simulation():
         elif algo == "C-SCAN":
             seq, total = cscan(requests, head)
         draw_disk(requests, head, seq)
-        output_label.config(text=f"Order: {seq}\nTotal Head Movement: {total}")
+        seek_time = round(total * 0.1, 2)
+        output_label.config(text=f"Order: {seq}\nTotal Head Movement: {total} tracks\nTotal Seek Time: {seek_time} ms")
     except Exception as e:
         output_label.config(text=f"Error: {str(e)}")
 
